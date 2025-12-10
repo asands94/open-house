@@ -3,11 +3,21 @@ const router = express.Router()
 
 const Listing = require('../models/listing')
 
-// GET /
+// GET /listings
 router.get('/', async (req, res) => {
     try {
         const listings = await Listing.find()
         res.render('listings/index.ejs', { listings })
+    } catch (e) {
+        console.log(e)
+        res.redirect('/')
+    }
+})
+
+// GET /listings/new
+router.get('/new', (req, res) => {
+    try {
+        res.render('listings/new.ejs')
     } catch (e) {
         console.log(e)
         res.redirect('/')

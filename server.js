@@ -15,7 +15,7 @@ const passUserToView = require('./middleware/pass-user-to-view.js')
 const port = process.env.PORT ? process.env.PORT : '3000'
 
 const authController = require('./controllers/auth.js')
-const listingsController = require('./controllers/listings')
+const listingsController = require('./controllers/listings.js')
 
 mongoose.connect(process.env.MONGODB_URI)
 
@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/auth', authController)
-app.use('/listings', listingsController)
+app.use('/listings', isSignedIn, listingsController)
 
 app.listen(port, () => {
     console.log(`The express app is ready on port ${port}!`)

@@ -15,6 +15,7 @@ const passUserToView = require('./middleware/pass-user-to-view.js')
 const port = process.env.PORT ? process.env.PORT : '3000'
 
 const authController = require('./controllers/auth.js')
+const listingsController = require('./controllers/listings')
 
 mongoose.connect(process.env.MONGODB_URI)
 
@@ -47,10 +48,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/auth', authController)
-
-app.get('/vip-lounge', isSignedIn, (req, res) => {
-    res.send(`Welcome to the party ${req.session.user.username}.`)
-})
+app.use('/listings', listingsController)
 
 app.listen(port, () => {
     console.log(`The express app is ready on port ${port}!`)

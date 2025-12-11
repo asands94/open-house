@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
     }
 })
 
-// GET /listings/:listingID
+// GET /listings/:listingId
 router.get('/:listingId', async (req, res) => {
     try {
         const listing = await Listing.findById(req.params.listingId).populate(
@@ -48,6 +48,22 @@ router.get('/:listingId', async (req, res) => {
         })
     } catch (error) {
         console.log(error)
+        res.redirect('/')
+    }
+})
+
+// DELETE /listings/:listingId
+router.delete('/:listingId', async (req, res) => {
+    try {
+        const listing = await Listing.findById(req.params.listingId)
+        if (listing.owner.equals(req.session.user._id)) {
+            await listing.deleteOne()
+            res.redirect('/listings')
+        } else {
+            res.send("You don't have permission to do that.")
+        }
+    } catch (error) {
+        console.error(error)
         res.redirect('/')
     }
 })

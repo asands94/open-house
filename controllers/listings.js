@@ -43,8 +43,13 @@ router.get('/:listingId', async (req, res) => {
             'owner'
         )
 
+        const userHasFavorited = listing.favoritedByUsers.some((user) =>
+            user.equals(req.session.user._id)
+        )
+
         res.render('listings/show.ejs', {
             listing,
+            userHasFavorited,
         })
     } catch (error) {
         console.log(error)
@@ -96,4 +101,31 @@ router.put('/:listingId', async (req, res) => {
         res.redirect('/')
     }
 })
+
+// POST /listings/:listingId/favorited-by/:userId
+router.post('/:listingId/favorited-by/:userId', async (req, res) => {
+    try {
+        await Listing.findByIdAndUpdate(req.params.listingId, {
+            $push: { favoritedByUsers: req.params.userId },
+        })
+        res.redirect(`/listings/${req.params.listingId}`)
+    } catch (error) {
+        console.log(error)
+        res.redirect('/')
+    }
+})
+
+// DELETE /listings/:listingId/favorited-by/:userId
+router.delete('/:listingId/favorited-by/:userId', async (req, res) => {
+    try {
+        await Listing.findByIdAndUpdate(req.params.listingId, {
+            $pull: { favoritedByUsers: req.params.userId },
+        })
+        res.redirect(`/listings/${req.params.listingId}`)
+    } catch (error) {
+        console.log(error)
+        res.redirect('/')
+    }
+})
+
 module.exports = router

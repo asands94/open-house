@@ -13,6 +13,7 @@
             <li>
                 A listing in <%= listing.city %> owned by <%=
                 listing.owner.username %>.
+                <a href="/listings/<%= listing._id %>">View more details.</a>
             </li>
             <% }) %>
         </ul>
